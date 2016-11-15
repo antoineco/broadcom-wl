@@ -16,8 +16,8 @@ The following kernel modules are incompatible with this driver and should not be
 * b43
 * brcmsmac
 
-Make sure to unload them with the `rmmod` command and add them the blacklist so that they are not automatically reloaded
-during the next system startup:
+Make sure to unload (`rmmod` command) and blacklist those modules in order to prevent them from being automatically
+reloaded during the next system startup:
 
 `/etc/modprobe.d/blacklist.conf`
 ```
@@ -52,8 +52,8 @@ $ dkms status
 broadcom-wl, 6.30.223.271: added
 ```
 
-The module should appear as *installed* in the list of modules managed by DKMS after the first system startup on the new
-kernel:
+Providing that the `dkms` service is enabled, the module should appear as *installed* in the list of modules managed by
+DKMS after the system boots for the first time on the new kernel:
 
 ```sh
 $ dkms status
@@ -65,5 +65,14 @@ broadcom-wl, 6.30.223.271, 4.7.6-200.x86_64, x86_64: installed
 ## See also
 
 * [Official README file][3]
+* Arch Linux packages: [broadcom-wl][4] / [broadcom-wl-dkms][5]
+* Debian packages: [broadcom-sta][6] ([source repository][7])
+* [kmod-wl][8] package for RPM Fusion ([source repository][9])
 
 [3]: https://www.broadcom.com/docs/linux_sta/README_6.30.223.271.txt
+[4]: https://aur.archlinux.org/packages/broadcom-wl/
+[5]: https://aur.archlinux.org/packages/broadcom-wl-dkms/
+[6]: https://packages.debian.org/source/sid/broadcom-sta
+[7]: https://gitlab.com/setecastronomy/broadcom-sta/tree/debian
+[8]: http://download1.rpmfusion.org/nonfree/fedora/development/rawhide/Everything/x86_64/os/repoview/kmod-wl.html
+[9]: https://github.com/rpmfusion/wl-kmod
