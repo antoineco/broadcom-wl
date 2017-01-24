@@ -1,12 +1,12 @@
 # Broadcom Linux hybrid wireless driver (64-bit)
 
-Re-upload from the source code found on the [Broadcom 802.11 support page][1]
+Re-upload from the source code found on the [Broadcom Support and Downloads page][1]
 
 **Patched for Linux >= 4.7**
 
 Tested on a BCM4360-based 802.11ac Wireless Network Adapter (TP-LINK Archer T8E)
 
-[1]: https://www.broadcom.com/support/802.11
+[1]: https://www.broadcom.com/support/download-search/?pg=&pf=Wireless+LAN+Infrastructure
 
 ## Prerequisites
 
@@ -64,12 +64,12 @@ broadcom-wl, 6.30.223.271, 4.7.6-200.x86_64, x86_64: installed
 
 ## See also
 
-* [Official README file][3]
+* [Official README file][3] (download)
 * Arch Linux packages: [broadcom-wl][4] / [broadcom-wl-dkms][5]
 * Debian packages: [broadcom-sta][6] ([source repository][7])
 * [kmod-wl][8] package for RPM Fusion ([source repository][9])
 
-[3]: https://www.broadcom.com/docs/linux_sta/README_6.30.223.271.txt
+[3]: https://docs.broadcom.com/docs-and-downloads/docs/linux_sta/README_6.30.223.271.txt
 [4]: https://aur.archlinux.org/packages/broadcom-wl/
 [5]: https://aur.archlinux.org/packages/broadcom-wl-dkms/
 [6]: https://packages.debian.org/source/sid/broadcom-sta
