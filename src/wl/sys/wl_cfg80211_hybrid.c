@@ -30,6 +30,9 @@
 #include <linux/kthread.h>
 #include <linux/netdevice.h>
 #include <linux/ieee80211.h>
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0)
+#include <linux/sched/signal.h>
+#endif
 #include <net/cfg80211.h>
 #include <linux/nl80211.h>
 #include <net/rtnetlink.h>
