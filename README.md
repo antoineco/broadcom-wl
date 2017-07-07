@@ -71,7 +71,7 @@ broadcom-wl, 6.30.223.271, 4.7.6-200.x86_64, x86_64: installed
 
 [3]: https://docs.broadcom.com/docs-and-downloads/docs/linux_sta/README_6.30.223.271.txt
 [4]: https://aur.archlinux.org/packages/broadcom-wl/
-[5]: https://aur.archlinux.org/packages/broadcom-wl-dkms/
+[5]: https://www.archlinux.org/packages/community/x86_64/broadcom-wl-dkms/
 [6]: https://packages.debian.org/source/sid/broadcom-sta
 [7]: https://gitlab.com/setecastronomy/broadcom-sta/tree/debian
 [8]: http://download1.rpmfusion.org/nonfree/fedora/development/rawhide/Everything/x86_64/os/repoview/kmod-wl.html
