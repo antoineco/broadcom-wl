@@ -1072,11 +1072,21 @@ osl_os_get_image_block(char *buf, int len, void *image)
 {
 	struct file *fp = (struct file *)image;
 	int rdlen;
+	loff_t pos;
 
 	if (!image)
 		return 0;
 
-	rdlen = kernel_read(fp, fp->f_pos, buf, len);
+	pos = fp->f_pos;
+	rdlen = kernel_read(fp,
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 14, 0)
+			pos,
+#endif
+			buf, len
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0)
+			,&pos
+#endif
+	);
 	if (rdlen > 0)
 		fp->f_pos += rdlen;
 
