@@ -2976,7 +2976,14 @@ _wl_add_monitor_if(wl_task_t *task)
 	}
 
 	ASSERT(strlen(wlif->name) > 0);
+#if __GNUC__ < 8
 	strncpy(wlif->dev->name, wlif->name, strlen(wlif->name));
+#else
+	// Should have been:
+	// strncpy(wlif->dev->name, wlif->name, sizeof(wlif->dev->name) - 1);
+	// wlif->dev->name[sizeof(wlif->dev->name) - 1] = '\0';
+	memcpy(wlif->dev->name, wlif->name, strlen(wlif->name));
+#endif
 
 	wl->monitor_dev = dev;
 	if (wl->monitor_type == 1)
