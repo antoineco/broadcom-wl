@@ -70,7 +70,7 @@ broadcom-wl, 6.30.223.271, 4.7.6-200.x86_64, x86_64: installed
 * [kmod-wl][8] package for RPM Fusion ([source repository][9])
 
 [3]: https://docs.broadcom.com/docs-and-downloads/docs/linux_sta/README_6.30.223.271.txt
-[4]: https://aur.archlinux.org/packages/broadcom-wl/
+[4]: https://www.archlinux.org/packages/community/x86_64/broadcom-wl/
 [5]: https://www.archlinux.org/packages/community/x86_64/broadcom-wl-dkms/
 [6]: https://packages.debian.org/source/sid/broadcom-sta
 [7]: https://salsa.debian.org/broadcom-sta-team/broadcom-sta
