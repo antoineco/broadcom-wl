@@ -457,7 +457,7 @@ wl_dev_ioctl(struct net_device *dev, u32 cmd, void *arg, u32 len)
 	ifr.ifr_data = (caddr_t)&ioc;
 
 	fs = get_fs();
-	set_fs(get_ds());
+	set_fs(KERNEL_DS);
 #if defined(WL_USE_NETDEV_OPS)
 	err = dev->netdev_ops->ndo_do_ioctl(dev, &ifr, SIOCDEVPRIVATE);
 #else
