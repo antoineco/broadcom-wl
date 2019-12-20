@@ -1664,11 +1664,7 @@ wl_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 	}
 
 	WL_LOCK(wl);
-	if (!capable(CAP_NET_ADMIN)) {
-		bcmerror = BCME_EPERM;
-	} else {
-		bcmerror = wlc_ioctl(wl->wlc, ioc.cmd, buf, ioc.len, wlif->wlcif);
-	}
+	bcmerror = wlc_ioctl(wl->wlc, ioc.cmd, buf, ioc.len, wlif->wlcif);
 	WL_UNLOCK(wl);
 
 done1:
