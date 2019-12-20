@@ -932,7 +932,11 @@ osl_getcycles(void)
 	uint cycles;
 
 #if defined(__i386__)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 3, 0)
+	cycles = (u32)rdtsc();
+#else
 	rdtscl(cycles);
+#endif
 #else
 	cycles = 0;
 #endif 
