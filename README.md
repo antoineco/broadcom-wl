@@ -75,4 +75,4 @@ broadcom-wl, 6.30.223.271, 4.7.6-200.x86_64, x86_64: installed
 [6]: https://packages.debian.org/source/sid/broadcom-sta
 [7]: https://salsa.debian.org/broadcom-sta-team/broadcom-sta
 [8]: http://download1.rpmfusion.org/nonfree/fedora/development/rawhide/Everything/x86_64/os/repoview/kmod-wl.html
-[9]: https://github.com/rpmfusion/wl-kmod
+[9]: https://pkgs.rpmfusion.org/cgit/nonfree/wl-kmod.git/
