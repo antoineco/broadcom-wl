@@ -588,7 +588,11 @@ wl_attach(uint16 vendor, uint16 device, ulong regs,
 	}
 	wl->bcm_bustype = bustype;
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 6, 0)
 	if ((wl->regsva = ioremap_nocache(dev->base_addr, PCI_BAR0_WINSZ)) == NULL) {
+#else
+	if ((wl->regsva = ioremap(dev->base_addr, PCI_BAR0_WINSZ)) == NULL) {
+#endif
 		WL_ERROR(("wl%d: ioremap() failed\n", unit));
 		goto fail;
 	}
@@ -778,7 +782,12 @@ wl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	if ((val & 0x0000ff00) != 0)
 		pci_write_config_dword(pdev, 0x40, val & 0xffff00ff);
 	bar1_size = pci_resource_len(pdev, 2);
-	bar1_addr = (uchar *)ioremap_nocache(pci_resource_start(pdev, 2), bar1_size);
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 6, 0)
+	bar1_addr = (uchar *)ioremap_nocache(pci_resource_start(pdev, 2),
+#else
+	bar1_addr = (uchar *)ioremap(pci_resource_start(pdev, 2),
+#endif
+		bar1_size);
 	wl = wl_attach(pdev->vendor, pdev->device, pci_resource_start(pdev, 0), PCI_BUS, pdev,
 		pdev->irq, bar1_addr, bar1_size);
 
@@ -3358,10 +3367,16 @@ wl_proc_write(struct file *filp, const char __user *buff, size_t length, loff_t 
 }
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 0)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 6, 0)
 static const struct file_operations wl_fops = {
 	.owner	= THIS_MODULE,
 	.read	= wl_proc_read,
 	.write	= wl_proc_write,
+#else
+static const struct proc_ops wl_fops = {
+	.proc_read	= wl_proc_read,
+	.proc_write	= wl_proc_write,
+#endif
 };
 #endif
 

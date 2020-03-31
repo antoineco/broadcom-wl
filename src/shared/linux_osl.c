@@ -946,7 +946,11 @@ osl_getcycles(void)
 void *
 osl_reg_map(uint32 pa, uint size)
 {
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 6, 0)
 	return (ioremap_nocache((unsigned long)pa, (unsigned long)size));
+#else
+	return (ioremap((unsigned long)pa, (unsigned long)size));
+#endif
 }
 
 void
