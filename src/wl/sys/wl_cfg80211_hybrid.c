@@ -444,7 +444,9 @@ wl_dev_ioctl(struct net_device *dev, u32 cmd, void *arg, u32 len)
 {
 	struct ifreq ifr;
 	struct wl_ioctl ioc;
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0)
 	mm_segment_t fs;
+#endif
 	s32 err = 0;
 
 	BUG_ON(len < sizeof(int));
@@ -456,18 +458,22 @@ wl_dev_ioctl(struct net_device *dev, u32 cmd, void *arg, u32 len)
 	strcpy(ifr.ifr_name, dev->name);
 	ifr.ifr_data = (caddr_t)&ioc;
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0)
 	fs = get_fs();
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 1, 0)
 	set_fs(KERNEL_DS);
 #else
 	set_fs(get_ds());
 #endif
+#endif
 #if defined(WL_USE_NETDEV_OPS)
 	err = dev->netdev_ops->ndo_do_ioctl(dev, &ifr, SIOCDEVPRIVATE);
 #else
 	err = dev->do_ioctl(dev, &ifr, SIOCDEVPRIVATE);
 #endif
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0)
 	set_fs(fs);
+#endif
 
 	return err;
 }
