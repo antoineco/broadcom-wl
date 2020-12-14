@@ -1657,6 +1657,7 @@ wl_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 		goto done2;
 	}
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0)
 #if LINUX_VERSION_CODE < KERNEL_VERSION(5, 9, 0)
 	if (segment_eq(get_fs(), KERNEL_DS))
 #else
@@ -1665,6 +1666,9 @@ wl_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 		buf = ioc.buf;
 
 	else if (ioc.buf) {
+#else
+	if (ioc.buf) {
+#endif
 		if (!(buf = (void *) MALLOC(wl->osh, MAX(ioc.len, WLC_IOCTL_MAXLEN)))) {
 			bcmerror = BCME_NORESOURCE;
 			goto done2;
