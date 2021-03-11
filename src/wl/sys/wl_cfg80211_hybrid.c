@@ -41,6 +41,9 @@
 #include <wlioctl.h>
 #include <proto/802.11.h>
 #include <wl_cfg80211_hybrid.h>
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
+#include <wl_linux.h>
+#endif
 
 #define EVENT_TYPE(e) dtoh32((e)->event_type)
 #define EVENT_FLAGS(e) dtoh16((e)->flags)
@@ -442,13 +445,16 @@ static void key_endian_to_host(struct wl_wsec_key *key)
 static s32
 wl_dev_ioctl(struct net_device *dev, u32 cmd, void *arg, u32 len)
 {
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0)
 	struct ifreq ifr;
 	struct wl_ioctl ioc;
 	mm_segment_t fs;
 	s32 err = 0;
+#endif
 
 	BUG_ON(len < sizeof(int));
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0)
 	memset(&ioc, 0, sizeof(ioc));
 	ioc.cmd = cmd;
 	ioc.buf = arg;
@@ -470,6 +476,9 @@ wl_dev_ioctl(struct net_device *dev, u32 cmd, void *arg, u32 len)
 	set_fs(fs);
 
 	return err;
+#else
+	return wlc_ioctl_internal(dev, cmd, arg, len);
+#endif
 }
 
 static s32

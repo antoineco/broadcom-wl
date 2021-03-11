@@ -37,6 +37,9 @@ typedef const struct si_pub	si_t;
 
 #include <wl_dbg.h>
 #include <wl_iw.h>
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
+#include <wl_linux.h>
+#endif
 
 extern bool wl_iw_conn_status_str(uint32 event_type, uint32 status,
 	uint32 reason, char* stringBuf, uint buflen);
@@ -103,6 +106,7 @@ dev_wlc_ioctl(
 	int len
 )
 {
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0)
 	struct ifreq ifr;
 	wl_ioctl_t ioc;
 	mm_segment_t fs;
@@ -126,6 +130,9 @@ dev_wlc_ioctl(
 	set_fs(fs);
 
 	return ret;
+#else
+	return wlc_ioctl_internal(dev, cmd, arg, len);
+#endif
 }
 
 static int
