@@ -3321,7 +3321,11 @@ wl_proc_read(char *buffer, char **start, off_t offset, int length, int *eof, voi
 static ssize_t
 wl_proc_read(struct file *filp, char __user *buffer, size_t length, loff_t *offp)
 {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 17, 0))
 	wl_info_t * wl = PDE_DATA(file_inode(filp));
+#else
+	wl_info_t * wl = pde_data(file_inode(filp));
+#endif
 #endif
 	int bcmerror, len;
 	int to_user = 0;
@@ -3378,7 +3382,11 @@ wl_proc_write(struct file *filp, const char *buff, unsigned long length, void *d
 static ssize_t
 wl_proc_write(struct file *filp, const char __user *buff, size_t length, loff_t *offp)
 {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 17, 0))
 	wl_info_t * wl = PDE_DATA(file_inode(filp));
+#else
+	wl_info_t * wl = pde_data(file_inode(filp));
+#endif
 #endif
 	int from_user = 0;
 	int bcmerror;
