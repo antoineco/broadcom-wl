@@ -640,7 +640,11 @@ wl_attach(uint16 vendor, uint16 device, ulong regs,
 			WL_ERROR(("wl%d: Error setting MAC ADDRESS\n", unit));
 	}
 #endif 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 17, 0)
 	bcopy(&wl->pub->cur_etheraddr, dev->dev_addr, ETHER_ADDR_LEN);
+#else
+	dev_addr_mod(dev, 0, &wl->pub->cur_etheraddr, ETHER_ADDR_LEN);
+#endif
 
 	online_cpus = 1;
 
@@ -1856,7 +1860,11 @@ wl_set_mac_address(struct net_device *dev, void *addr)
 
 	WL_LOCK(wl);
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 17, 0)
 	bcopy(sa->sa_data, dev->dev_addr, ETHER_ADDR_LEN);
+#else
+	dev_addr_mod(dev, 0, sa->sa_data, ETHER_ADDR_LEN);
+#endif
 	err = wlc_iovar_op(wl->wlc, "cur_etheraddr", NULL, 0, sa->sa_data, ETHER_ADDR_LEN,
 		IOV_SET, (WL_DEV_IF(dev))->wlcif);
 	WL_UNLOCK(wl);
@@ -3040,7 +3048,11 @@ _wl_add_monitor_if(wl_task_t *task)
 	else
 		dev->type = ARPHRD_IEEE80211_RADIOTAP;
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 17, 0)
 	bcopy(wl->dev->dev_addr, dev->dev_addr, ETHER_ADDR_LEN);
+#else
+	dev_addr_mod(dev, 0, wl->dev->dev_addr, ETHER_ADDR_LEN);
+#endif
 
 #if defined(WL_USE_NETDEV_OPS)
 	dev->netdev_ops = &wl_netdev_monitor_ops;
