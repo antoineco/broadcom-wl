@@ -6,7 +6,7 @@ Re-upload from the source code found on the [Broadcom Support and Downloads page
 
 Tested on a BCM4360-based 802.11ac Wireless Network Adapter (TP-LINK Archer T8E)
 
-[1]: https://www.broadcom.com/support/download-search/?pg=&pf=Wireless+LAN+Infrastructure
+[1]: https://www.broadcom.com/support/download-search?pg=Wireless+Embedded+Solutions+and+RF+Components&pf=Legacy+Wireless&pa=Driver&dk=BCM4312&l=true
 
 ## Prerequisites
 
