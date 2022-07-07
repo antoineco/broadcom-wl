@@ -824,7 +824,9 @@ wl_set_auth_type(struct net_device *dev, struct cfg80211_connect_params *sme)
 		break;
 	case NL80211_AUTHTYPE_NETWORK_EAP:
 		WL_DBG(("network eap\n"));
-		// fallthrough
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 4, 0)
+		fallthrough;
+#endif
 	default:
 		val = 2;
 		WL_ERR(("invalid auth type (%d)\n", sme->auth_type));
