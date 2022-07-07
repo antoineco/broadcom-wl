@@ -6,18 +6,20 @@ on:
   pull_request:
     branches: [ patch-linux4.7 ]
 
+permissions: {}
+
 jobs:
 
   # NOTE(antoineco): This job only tests that the module builds on whatever
-  # kernel version the GitHub Actions runner is running:
-  # https://github.com/actions/virtual-environments/blob/ubuntu20/20220425.1/images/linux/Ubuntu2004-Readme.md
+  # kernel version the self-hosted GitHub Actions runner is running.
+  # Current: 5.18.9-200.fc36.x86_64
   #
   # Ideally, we would be able to select one runner for each kernel version we
-  # intend to support, but this likely requires deploying self-hosted runners.
+  # intend to support.
   #
   build:
     name: Build Kernel Module
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, X64]
 
     steps:
     - uses: actions/checkout@v3
