@@ -2412,7 +2412,11 @@ wl_bss_roaming_done(struct wl_cfg80211_priv *wl, struct net_device *ndev,
 	struct wl_cfg80211_connect_info *conn_info = wl_to_conn(wl);
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0)
 	struct cfg80211_roam_info roam_info = {
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 0, 0)
 		.bssid = wl->profile->bssid,
+#else
+		.links[0].bssid = wl->profile->bssid,
+#endif
 		.req_ie = conn_info->req_ie,
 		.req_ie_len = conn_info->req_ie_len,
 		.resp_ie = conn_info->resp_ie,
