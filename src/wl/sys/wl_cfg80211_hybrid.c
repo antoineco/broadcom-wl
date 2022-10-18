@@ -55,22 +55,13 @@ u32 wl_dbg_level = WL_DBG_ERR | WL_DBG_INFO;
 u32 wl_dbg_level = WL_DBG_ERR;
 #endif
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-static int wl_cfg80211_change_iface(struct wiphy *wiphy,
-					struct net_device *ndev,
-					enum nl80211_iftype type,
-#else
 static s32 wl_cfg80211_change_iface(struct wiphy *wiphy, struct net_device *ndev,
            enum nl80211_iftype type,
-#endif
 #if LINUX_VERSION_CODE < KERNEL_VERSION(4, 12, 0)
            u32 *flags,
 #endif
 	   struct vif_params *params);
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-static int wl_cfg80211_scan(struct wiphy *wiphy,
-				struct cfg80211_scan_request *request);
-#elif LINUX_VERSION_CODE >= KERNEL_VERSION(3, 6, 0)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 6, 0)
 static s32
 wl_cfg80211_scan(struct wiphy *wiphy,
                  struct cfg80211_scan_request *request);
@@ -115,48 +106,39 @@ static s32 wl_cfg80211_get_tx_power(struct wiphy *wiphy, struct wireless_dev *wd
 static s32 wl_cfg80211_get_tx_power(struct wiphy *wiphy, s32 *dbm);
 #endif
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-static int wl_cfg80211_config_default_key(struct wiphy *wiphy,
-					   struct net_device *ndev, int link_id,
-					   u8 key_idx, bool unicast,
-					   bool multicast);
-#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 38)
 static s32 wl_cfg80211_config_default_key(struct wiphy *wiphy,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
+           struct net_device *dev, int link_id, u8 key_idx, bool unicast, bool multicast);
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 38)
            struct net_device *dev, u8 key_idx, bool unicast, bool multicast);
 #else
-static s32 wl_cfg80211_config_default_key(struct wiphy *wiphy,
            struct net_device *dev, u8 key_idx);
 #endif
+static s32 wl_cfg80211_add_key(struct wiphy *wiphy, struct net_device *dev,
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-static int wl_cfg80211_add_key(struct wiphy *wiphy, struct net_device *ndev,
-				   int link_id, u8 key_idxx, bool pairwise,
-				   const u8 *mac_addr,
-				   struct key_params *params);
-static int wl_cfg80211_del_key(struct wiphy *wiphy, struct net_device *ndev,
-				   int link_id, u8 key_idx, bool pairwise,
-				   const u8 *mac_addr);
-static int wl_cfg80211_get_key(struct wiphy *wiphy, struct net_device *ndev,
-				   int link_id, u8 key_idx, bool pairwise,
-				   const u8 *mac_addr, void *cookie,
-				   void (*callback) (void *cookie,
-						     struct key_params *));
+           int link_id, u8 key_idx, bool pairwise, const u8 *mac_addr, struct key_params *params);
 #elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)
-static s32 wl_cfg80211_add_key(struct wiphy *wiphy, struct net_device *dev,
            u8 key_idx, bool pairwise, const u8 *mac_addr, struct key_params *params);
-static s32 wl_cfg80211_del_key(struct wiphy *wiphy, struct net_device *dev,
-           u8 key_idx, bool pairwise, const u8 *mac_addr);
-static s32 wl_cfg80211_get_key(struct wiphy *wiphy, struct net_device *dev,
-           u8 key_idx, bool pairwise, const u8 *mac_addr,
-           void *cookie, void (*callback) (void *cookie, struct key_params *params));
 #else
-static s32 wl_cfg80211_add_key(struct wiphy *wiphy, struct net_device *dev,
            u8 key_idx, const u8 *mac_addr, struct key_params *params);
+#endif
 static s32 wl_cfg80211_del_key(struct wiphy *wiphy, struct net_device *dev,
-           u8 key_idx, const u8 *mac_addr);
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
+           int link_id, u8 key_idx, bool pairwise, const u8 *mac_addr);
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)
+           u8 key_idx, bool pairwise, const u8 *mac_addr);
+#else
+	   u8 key_idx, const u8 *mac_addr)
+#endif
 static s32 wl_cfg80211_get_key(struct wiphy *wiphy, struct net_device *dev,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
+           int link_id, u8 key_idx, bool pairwise, const u8 *mac_addr,
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)
+           u8 key_idx, bool pairwise, const u8 *mac_addr,
+#else
            u8 key_idx, const u8 *mac_addr,
+#endif
            void *cookie, void (*callback) (void *cookie, struct key_params *params));
-#endif 
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33)
 static s32 wl_cfg80211_set_pmksa(struct wiphy *wiphy, struct net_device *dev,
@@ -1225,18 +1207,13 @@ static s32 wl_cfg80211_get_tx_power(struct wiphy *wiphy, s32 *dbm)
 	return err;
 }
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-static int wl_cfg80211_config_default_key(struct wiphy *wiphy,
-					   struct net_device *ndev, int link_id,
-					   u8 key_idx, bool unicast,
-					   bool multicast)
-#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 38)
 static s32
 wl_cfg80211_config_default_key(struct wiphy *wiphy,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
+	struct net_device *dev, int link_id, u8 key_idx, bool unicast, bool multicast)
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 38)
 	struct net_device *dev, u8 key_idx, bool unicast, bool multicast)
 #else
-static s32
-wl_cfg80211_config_default_key(struct wiphy *wiphy,
 	struct net_device *dev, u8 key_idx)
 #endif
 {
@@ -1247,11 +1224,7 @@ wl_cfg80211_config_default_key(struct wiphy *wiphy,
 
 	index = (u32) key_idx;
 	index = htod32(index);
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-	err = wl_dev_ioctl(ndev, WLC_SET_KEY_PRIMARY, &index, sizeof(index));
-#else
 	err = wl_dev_ioctl(dev, WLC_SET_KEY_PRIMARY, &index, sizeof(index));
-#endif
 	if (err) {
 		WL_DBG(("error (%d)\n", err));
 	}
@@ -1259,26 +1232,17 @@ wl_cfg80211_config_default_key(struct wiphy *wiphy,
 	return 0;
 }
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-static int wl_cfg80211_add_key(struct wiphy *wiphy, struct net_device *ndev,
-				   int link_id, u8 key_idx, bool pairwise,
-				   const u8 *mac_addr,
-				   struct key_params *params)
-#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)
 static s32
 wl_cfg80211_add_key(struct wiphy *wiphy, struct net_device *dev,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
+                    int link_id, u8 key_idx, bool pairwise, const u8 *mac_addr, struct key_params *params)
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)
                     u8 key_idx, bool pairwise, const u8 *mac_addr, struct key_params *params)
 #else
-static s32
-wl_cfg80211_add_key(struct wiphy *wiphy, struct net_device *dev,
                     u8 key_idx, const u8 *mac_addr, struct key_params *params)
 #endif
 {
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-	struct wl_cfg80211_priv *wl = ndev_to_wl(ndev);
-#else
 	struct wl_cfg80211_priv *wl = ndev_to_wl(dev);
-#endif
 	struct wl_wsec_key key;
 	s32 secval, secnew = 0;
 	s32 err = 0;
@@ -1356,21 +1320,13 @@ wl_cfg80211_add_key(struct wiphy *wiphy, struct net_device *dev,
 	if (wl->passive) {
 		schedule();
 	}
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-	err = wl_dev_ioctl(ndev, WLC_SET_KEY, &key, sizeof(key));
-#else
 	err = wl_dev_ioctl(dev, WLC_SET_KEY, &key, sizeof(key));
-#endif
 	if (err) {
 		WL_ERR(("WLC_SET_KEY error (%d)\n", err));
 		return err;
 	}
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-	if ((err = wl_dev_intvar_get(ndev, "wsec", &secval))) {
-#else
 	if ((err = wl_dev_intvar_get(dev, "wsec", &secval))) {
-#endif
 		return err;
 	}
 	if (secnew == WEP_ENABLED) {
@@ -1381,11 +1337,7 @@ wl_cfg80211_add_key(struct wiphy *wiphy, struct net_device *dev,
 	}
 	secval |= secnew;
 	WL_DBG(("set wsec to %d\n", secval));
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-	err = wl_dev_intvar_set(ndev, "wsec", secval);
-#else
 	err = wl_dev_intvar_set(dev, "wsec", secval);
-#endif
 	if (err) {
 		WL_ERR(("error (%d)\n", err));
 		return err;
@@ -1400,17 +1352,13 @@ wl_cfg80211_add_key(struct wiphy *wiphy, struct net_device *dev,
 
 	return err;
 }
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-static int wl_cfg80211_del_key(struct wiphy *wiphy, struct net_device *ndev,
-				   int link_id, u8 key_idx, bool pairwise,
-				   const u8 *mac_addr)
-#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)
 static s32
 wl_cfg80211_del_key(struct wiphy *wiphy, struct net_device *dev,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
+                    int link_id, u8 key_idx, bool pairwise, const u8 *mac_addr)
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)
                     u8 key_idx, bool pairwise, const u8 *mac_addr)
 #else
-static s32
-wl_cfg80211_del_key(struct wiphy *wiphy, struct net_device *dev,
                     u8 key_idx, const u8 *mac_addr)
 #endif
 {
@@ -1431,11 +1379,7 @@ wl_cfg80211_del_key(struct wiphy *wiphy, struct net_device *dev,
 	key.algo = CRYPTO_ALGO_OFF;
 
 	key_endian_to_device(&key);
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-	err = wl_dev_ioctl(ndev, WLC_SET_KEY, &key, sizeof(key));
-#else
 	err = wl_dev_ioctl(dev, WLC_SET_KEY, &key, sizeof(key));
-#endif
 	if (err) {
 		if (err == -EINVAL) {
 			if (key.index >= DOT11_MAX_DEFAULT_KEYS) {
@@ -1451,23 +1395,16 @@ wl_cfg80211_del_key(struct wiphy *wiphy, struct net_device *dev,
 	return err;
 }
 
+static s32
+wl_cfg80211_get_key(struct wiphy *wiphy, struct net_device *dev,
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-static int wl_cfg80211_get_key(struct wiphy *wiphy, struct net_device *ndev,
-				   int link_id, u8 key_idx, bool pairwise,
-				   const u8 *mac_addr, void *cookie,
-				   void (*callback) (void *cookie,
-						     struct key_params *))
+                    int link_id, u8 key_idx, bool pairwise, const u8 *mac_addr, void *cookie,
 #elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)
-static s32
-wl_cfg80211_get_key(struct wiphy *wiphy, struct net_device *dev,
                     u8 key_idx, bool pairwise, const u8 *mac_addr, void *cookie,
-                    void (*callback) (void *cookie, struct key_params * params))
 #else
-static s32
-wl_cfg80211_get_key(struct wiphy *wiphy, struct net_device *dev,
                     u8 key_idx, const u8 *mac_addr, void *cookie,
-                    void (*callback) (void *cookie, struct key_params * params))
 #endif
+                    void (*callback) (void *cookie, struct key_params * params))
 {
 	struct key_params params;
 	struct wl_wsec_key key;
@@ -1484,11 +1421,7 @@ wl_cfg80211_get_key(struct wiphy *wiphy, struct net_device *dev,
 	key.index = key_idx;
 	key_endian_to_device(&key);
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-	if ((err = wl_dev_ioctl(ndev, WLC_GET_KEY, &key, sizeof(key)))) {
-#else
 	if ((err = wl_dev_ioctl(dev, WLC_GET_KEY, &key, sizeof(key)))) {
-#endif
 		return err;
 	}
 	key_endian_to_host(&key);
@@ -1496,11 +1429,7 @@ wl_cfg80211_get_key(struct wiphy *wiphy, struct net_device *dev,
 	params.key_len = (u8) min_t(u8, DOT11_MAX_KEY_SIZE, key.len);
 	memcpy((char *)params.key, key.data, params.key_len);
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
-	if ((err = wl_dev_ioctl(ndev, WLC_GET_WSEC, &wsec, sizeof(wsec)))) {
-#else
 	if ((err = wl_dev_ioctl(dev, WLC_GET_WSEC, &wsec, sizeof(wsec)))) {
-#endif
 		return err;
 	}
 	wsec = dtoh32(wsec);
