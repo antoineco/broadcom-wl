@@ -128,7 +128,7 @@ static s32 wl_cfg80211_del_key(struct wiphy *wiphy, struct net_device *dev,
 #elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)
            u8 key_idx, bool pairwise, const u8 *mac_addr);
 #else
-	   u8 key_idx, const u8 *mac_addr)
+	   u8 key_idx, const u8 *mac_addr);
 #endif
 static s32 wl_cfg80211_get_key(struct wiphy *wiphy, struct net_device *dev,
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
