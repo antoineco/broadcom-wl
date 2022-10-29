@@ -1,0 +1,53 @@
+# Lima VM definition for building the Broadcom wl kernel module.
+
+images:
+- location: https://download.fedoraproject.org/pub/fedora/linux/releases/36/Cloud/x86_64/images/Fedora-Cloud-Base-36-1.5.x86_64.qcow2
+  arch: x86_64
+  digest: sha256:ca9e514cc2f4a7a0188e7c68af60eb4e573d2e6850cc65b464697223f46b4605
+- location: https://download.fedoraproject.org/pub/fedora/linux/releases/36/Cloud/aarch64/images/Fedora-Cloud-Base-36-1.5.aarch64.qcow2
+  arch: aarch64
+  digest: sha256:5c0e7e99b0c542cb2155cd3b52bbf51a42a65917e52d37df457d1e9759b37512
+
+cpus: 2
+
+mounts:
+- location: /tmp/lima
+  writable: true
+
+containerd:
+  system: false
+  user: false
+
+provision:
+
+# Install build tools.
+- mode: system
+  script: |
+    #!/usr/bin/env bash
+    set -eux -o pipefail
+    dnf install -y make gcc
+
+# Install selected kernel.
+- mode: system
+  script: |
+    #!/usr/bin/env bash
+    set -eux -o pipefail
+    [ -f /tmp/lima/kernel.vars ] || exit 0
+    source /tmp/lima/kernel.vars
+    declare kernelv
+    kernelv="$(uname -r)"
+    [[ "${kernelv}" == "${KERNEL_RPM_VERSION}" ]] && exit 0
+    dnf install -y bodhi-client
+    export HOME="${HOME:-/root}"
+    declare tmpdir
+    tmpdir="$(mktemp -d)"
+    pushd "${tmpdir}"
+    bodhi updates download \
+    	--updateid="${BODHI_UPDATE_ID}" \
+    	--arch="$(arch)"
+    popd
+    dnf install -y \
+    	"${tmpdir}/kernel-core-${KERNEL_RPM_VERSION}.$(arch).rpm" \
+    	"${tmpdir}/kernel-headers-${KERNEL_RPM_VERSION}.$(arch).rpm" \
+    	"${tmpdir}/kernel-devel-${KERNEL_RPM_VERSION}.$(arch).rpm"
+    rm -rf "${tmpdir}"
