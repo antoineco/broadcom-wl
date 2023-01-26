@@ -37,16 +37,6 @@ jobs:
           os: f38
 
     steps:
-    - name: Install Lima from HEAD
-      # macos-12 runners have go@1.17 installed but not linked. We link then
-      # unlink go@1.17 to prevent errors during the installation of Lima HEAD,
-      # which depends on go@1.19 ("Could not symlink bin/go; Target
-      # /usr/local/bin/go is a symlink belonging to go@1.17").
-      run: |
-        brew link --overwrite go@1.17
-        brew unlink go@1.17 lima
-        brew install --HEAD lima
-
     - name: Get QEMU image info
       id: image
       # The outputs of this step are solely used for generating a cache key.
