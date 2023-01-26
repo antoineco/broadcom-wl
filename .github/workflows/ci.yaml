@@ -33,6 +33,8 @@ jobs:
           os: f37
         - kernel: '6.1'
           os: f38
+        - kernel: '6.2'
+          os: f38
 
     steps:
     - name: Install Lima from HEAD
