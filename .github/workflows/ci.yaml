@@ -32,7 +32,7 @@ jobs:
         - kernel: '6.0'
           os: f37
         - kernel: '6.1'
-          os: f38
+          os: f37
         - kernel: '6.2'
           os: f38
 
