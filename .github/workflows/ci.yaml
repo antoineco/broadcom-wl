@@ -35,6 +35,8 @@ jobs:
           os: f37
         - kernel: '6.2'
           os: f38
+        - kernel: '6.3'
+          os: f39
 
     steps:
     - name: Get QEMU image info
