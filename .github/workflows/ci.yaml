@@ -19,14 +19,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - kernel: '5.15'
-          os: f36
-        - kernel: '5.16'
-          os: f36
-        - kernel: '5.17'
-          os: f36
-        - kernel: '5.18'
-          os: f36
         - kernel: '5.19'
           os: f37
         - kernel: '6.0'
@@ -36,11 +28,13 @@ jobs:
         - kernel: '6.2'
           os: f38
         - kernel: '6.3'
-          os: f39
+          os: f38
         - kernel: '6.4'
-          os: f39
+          os: f38
         - kernel: '6.5'
-          os: f39
+          os: f38
+        - kernel: '6.6'
+          os: f40
 
     steps:
     - name: Get QEMU image info
