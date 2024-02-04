@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> This driver is no longer maintained.
+> Please refer to the software packages referenced at the bottom of this page for up-to-date alternatives.
+
 # Broadcom Linux hybrid wireless driver (64-bit)
 
 Re-upload from the source code found on the [Broadcom Support and Downloads page][1]
